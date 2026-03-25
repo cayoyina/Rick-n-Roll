@@ -36,6 +36,26 @@ canvas {
   background-color: #eee;
 }
 
+.startButton {
+   padding: 4px 8px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 5px;
+  margin-right: 5px;
+  font-size: 0.8em;
+  background-color: #eee;
+}
+
+.pauseButton {
+   padding: 4px 8px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 5px;
+  margin-right: 5px;
+  font-size: 0.8em;
+  background-color: #eee;
+}
+
 .button:hover {
   background-color: #ccc;
 }
@@ -58,12 +78,3 @@ input[type="file"]::file-selector-button {
   display: none;
 }
 
-.startButton {
-   padding: 4px 8px;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 5px;
-  margin-right: 5px;
-  font-size: 0.8em;
-  background-color: #eee;
-}

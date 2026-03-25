@@ -5,10 +5,11 @@ const poseNameInput = document.getElementById('poseName');
 const addPoseButton = document.getElementById('addPoseButton');
 const saveButton = document.getElementById('saveButton');
 const fileInput = document.getElementById("file-input");
-const startButton = document.geteElementById('startButton');
+
 
 const poseLibraryFileName = 'pose-library.json';
 const distanceThreshold = 0.2;
+let Audio = document.getElementById("RickRoll")
 let poseLibrary = new Map();
 let currentFeatures = null;
 let currentLabel = 'unknown';
@@ -40,13 +41,73 @@ let history = [];
 
   addPoseButton.addEventListener('click', addPose); // add pose button
   startButton.addEventListener('click', GameStart);
+  pauseButton.addEventListener('click', GamePause);
   fileInput.addEventListener('change', loadPoseLibrary); // load pose library input
   saveButton.addEventListener('click', savePoseLibrary); // save pose library button
 })();
+const bpm = 113;
+
+
+function GameStart() {
+  console.log("Hello");
+  ///Audio.currentbeat = 0
+  Audio.play()
+  GameLoop()
+}
+
+function GamePause() {
+  Audio.pause();
+}
+
+function GameLoop() {
+  const time = Audio.currentbeat
+  let beat = time / 0.530973451 * 2.0 //Achtel 
+  checkPoseTiming(beat);
+  //console.log(beat);
+  requestAnimationFrame(GameLoop);
+  //console.log(beat);
+}
+
+const cues = [
+  { time: 22, pose: "baram 2" },
+  { beat: 9.9, pose: "baram 3" },
+  { beat: 14.4, pose: "baram 5" },
+  { beat: 25.0, pose: "SO" },
+  { beat: 25.6, pose: "DO I" },
+  { beat: 29.0, pose: "I" },
+  { beat: 29.6, pose: "ON" },
+  { beat: 35.3, pose: "AAA" },
+  { beat: 42.6, pose: "GIVE" },
+  { beat: 44.6, pose: "LET" }
+
+];
+
+let currentCueIndex = 0;
+const tolerance = 0.3
+
+
+
+function checkPoseTiming(beat) {
+  const cue = cues[currentCueIndex];
+  if (!cue) return;
+
+  if (Math.abs(beat - cue.beat) < tolerance) {
+    console.log("JETZT Pose machen:", cue.pose);
+  }
+
+  if (beat > cue.beat + tolerance) {
+    currentCueIndex++;
+  }
+}
+
+
+
+
 
 function onRecognizedPose(label) {
   if (label !== 'unknown') {
     console.log(label);
+    Audio.currentbeat
   }
 }
 

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Pose Recognition</title>
-    <link rel="stylesheet" type="text/css" href="./styles.css">
+    <link rel="stylesheet" type="text/css" href="./style.css">
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils"></script>
@@ -17,23 +17,23 @@
         <video id="video" autoplay playsinline></video>
         <canvas id="canvas"></canvas>
     </div>
+
     <div class="container">
         <input type="text" id="poseName" placeholder="pose name">:
         <button id="addPoseButton" class="button"><b>add</b> pose sample</button>
     </div>
 
-<div class="startButton">
-    <button id="startButton" class="startButton">START</button>
-</div>
 
-    <audio controls autoplay>
-        <source src="RickRoll.ogg" type="audio/ogg">
-        <source src="RickRoll.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
+    <button id="startButton" class="startButton">START</button>
+
+    <button id="pauseButton" class="pauseButton">PAUSE</button>
+
+    <audio id="RickRoll">
+        <source src="RickRollKurz.wav" type="audio/mpeg">
     </audio>
 
 
-    <body onclick="GameStart()"></body>
+
 
     <div class="container">
         <button id="saveButton" class="button"><b>save</b> pose library</button>
