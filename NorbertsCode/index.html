@@ -32,7 +32,46 @@
         <source src="RickRollKurz.wav" type="audio/mpeg">
     </audio>
 
+    <body>
 
+
+
+        <img id="cacs" style="position:absolute; left:500px; top:100px;">
+
+
+        <script>
+            const img = document.getElementById("cacs");
+            const button = document.getElementById("startButton");
+            const stops = document.getElementById("pauseButton");
+            const speed = 1;
+
+
+
+            button.onclick = () => {
+                img.src = "cacs.jpg"; // image starts loading here
+
+                img.onload = () => {
+                    let x = window.innerWidth; // start at right edge
+                    img.style.left = x + "px";
+                    
+
+
+                    function move() {
+                        x -= speed;
+                        img.style.left = x + "px";
+
+                        // stop when completely off-screen
+                        if (x > -img.width) {
+                            requestAnimationFrame(move);
+                        }
+                    }
+
+                    move();
+                };
+            };
+        </script>
+
+    </body>
 
 
     <div class="container">

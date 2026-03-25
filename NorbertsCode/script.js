@@ -9,7 +9,8 @@ const fileInput = document.getElementById("file-input");
 
 const poseLibraryFileName = 'pose-library.json';
 const distanceThreshold = 0.2;
-let Audio = document.getElementById("RickRoll")
+let Audio = document.getElementById("RickRoll");
+let Sakura = document.getElementById("cacs");
 let poseLibrary = new Map();
 let currentFeatures = null;
 let currentLabel = 'unknown';
