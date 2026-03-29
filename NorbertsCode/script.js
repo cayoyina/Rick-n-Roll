@@ -46,12 +46,13 @@ let history = [];
   fileInput.addEventListener('change', loadPoseLibrary); // load pose library input
   saveButton.addEventListener('click', savePoseLibrary); // save pose library button
 })();
+
 const bpm = 113;
 
 
 function GameStart() {
   console.log("Hello");
-  ///Audio.currentbeat = 0
+  Audio.currentTime = 0;
   Audio.play()
   GameLoop()
 }
@@ -61,7 +62,7 @@ function GamePause() {
 }
 
 function GameLoop() {
-  const time = Audio.currentbeat
+  const time = Audio.currentTime
   let beat = time / 0.530973451 * 2.0 //Achtel 
   checkPoseTiming(beat);
   //console.log(beat);
@@ -69,52 +70,7 @@ function GameLoop() {
   //console.log(beat);
 }
 
-const cues = [
-  { time: 22, pose: "baram 2" },
-  { beat: 9.9, pose: "baram 3" },
-  { beat: 14.4, pose: "baram 5" },
-  { beat: 25.0, pose: "SO" },
-  { beat: 25.6, pose: "DO I" },
-  { beat: 29.0, pose: "I" },
-  { beat: 29.6, pose: "ON" },
-  { beat: 35.3, pose: "AAA" },
-  { beat: 42.6, pose: "GIVE" },
-  { beat: 44.6, pose: "LET" }
 
-];
-
-let currentCueIndex = 0;
-const tolerance = 0.3
-
-
-
-function checkPoseTiming(beat) {
-  const cue = cues[currentCueIndex];
-  if (!cue) return;
-
-  if (Math.abs(beat - cue.beat) < tolerance) {
-    console.log("JETZT Pose machen:", cue.pose);
-  }
-
-  if (beat > cue.beat + tolerance) {
-    currentCueIndex++;
-  }
-}
-
-
-
-
-
-function onRecognizedPose(label) {
-  if (label !== 'unknown') {
-    console.log(label);
-    Audio.currentbeat
-  }
-}
-
-/**************************************************************
- * draw and recognize poses
- */
 function onPoseResults(results) {
   let label = 'unknown';
 
@@ -166,6 +122,131 @@ function onPoseResults(results) {
 
   context.restore();
 }
+
+
+const cues = [
+  { beat: 21.5, pose: "pose-1", duration: 1 }, //
+  { beat: 37.0, pose: "pose-2", duration: 1 },
+  { beat: 53.0, pose: "pose-1", duration: 1 },
+  { beat: 93.0, pose: "pose-2", duration: 1 },
+  { beat: 95.5, pose: "pose-1", duration: 1 },
+  { beat: 107.5, pose: "pose-2", duration: 1 },
+  { beat: 112.0, pose: "pose-1", duration: 1 },
+  { beat: 133.0, pose: "pose-2", duration: 4 },
+  { beat: 164.5, pose: "pose-1", duration: 2 }, //give
+  { beat: 167.5, pose: "pose-2", duration: 2 }, // up
+  { beat: 172.0, pose: "pose-1", duration: 2 },
+  { beat: 175.0, pose: "pose-2", duration: 2 }
+];
+
+
+let currentCueIndex = 0;
+let holdStartTime = null
+const tolerance = 2
+const preTolerance = -3
+let isHolding = false;
+let tooSoon = false;
+
+function checkPoseTiming(beat) {
+  const cue = cues[currentCueIndex];
+  if (!cue) return;
+
+  const inWindow = Math.abs(beat - cue.beat) <= tolerance; // 
+
+  const preWindow = beat >= cue.beat + preTolerance && beat < cue.beat;
+
+  //  inWindow && beat >= cue.beat && currentLabel === cue.pose && !isHolding
+  //beat - cue.beat >= preTolerance && beat - cue.beat < tolerance
+
+  if (preWindow && currentLabel == cue.pose) {
+    console.log("WAS MACHST DU???????????????????");
+
+    if (beat - cue.beat >= preTolerance && beat - cue.beat < tolerance)
+      console.log("ZU FRÜH BROOOOOOOO");
+    tooSoon = true;
+  }
+
+  // if (!preWindow && cue.pose == 'unknown') {
+  // tooSoon = false;
+  // }
+
+  if (beat >= cue.beat) {
+    console.log("AAAAAVVE MARIA", cue.pose);
+  }
+
+  // 🔴 MISS CHECK (GANZ AM ANFANG)
+  if (beat > cue.beat + tolerance && !isHolding) {
+    console.log("❌ Pose verpasst!", cue.pose);
+    tooSoon = false;
+    currentCueIndex++;
+    return;
+  }
+
+
+  // 🟢 START der Pose (nur im Fenster erlaubt)
+  if (inWindow && currentLabel === cue.pose && !isHolding && !tooSoon) {
+    holdStartTime = beat; // wir schauen ab wann Pose gehlten
+    isHolding = true;
+    tooSoon = false;
+    console.log("Pose gestartet:", cue.pose);
+  }
+
+  // 🟡 HALTEN (IMMER weiter prüfen, egal ob im Fenster!)
+  if (isHolding) {
+    if (currentLabel === cue.pose) {
+
+      const heldTime = beat - holdStartTime;
+
+      if (heldTime >= cue.duration) {
+        console.log("✅ Pose gehalten!", cue.pose);
+
+        isHolding = false;
+        holdStartTime = null;
+        currentCueIndex++;
+      }
+
+    } else {
+      console.log("❌ Pose verloren", cue.pose);
+
+      isHolding = false;
+      holdStartTime = null;
+      tooSoon = false;
+      currentCueIndex++;
+    }
+  }
+}
+
+
+
+
+// function checkPoseTiming(beat) {
+//   const cue = cues[currentCueIndex];
+//   if (!cue) return;
+
+//   if (Math.abs(beat - cue.beat) < tolerance) {
+//     console.log("JETZT Pose machen:", cue.pose);
+//   }
+
+//   if (beat > cue.beat + tolerance) {
+//     currentCueIndex++;
+//   }
+// }
+
+
+
+
+
+function onRecognizedPose(label) {
+  if (label !== 'unknown') {
+    console.log(label);
+    Audio.currentbeat
+  }
+}
+
+/**************************************************************
+ * draw and recognize poses
+ */
+
 
 // calculate features
 function getPoseFeatures(landmarks) {
