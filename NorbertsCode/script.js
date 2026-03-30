@@ -146,6 +146,8 @@ const tolerance = 2
 const preTolerance = -3
 let isHolding = false;
 let tooSoon = false;
+let points = 0
+document.getElementById("points").innerText = points;
 
 function checkPoseTiming(beat) {
   const cue = cues[currentCueIndex];
@@ -203,6 +205,9 @@ function checkPoseTiming(beat) {
         isHolding = false;
         holdStartTime = null;
         currentCueIndex++;
+        points++;
+        document.getElementById("points").innerText = points;
+        console.log("You have", points, "points!");
       }
 
     } else {
