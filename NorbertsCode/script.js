@@ -123,20 +123,49 @@ function onPoseResults(results) {
   context.restore();
 }
 
+const img = document.getElementById("pistoleL");
+const button = document.getElementById("startButton");
+const stops = document.getElementById("pauseButton");
+const speed = 1;
+
+
+
+button.onclick = () => {
+  img.src = "pistoleL.png"; // image starts loading here
+
+  img.onload = () => {
+    let x = window.innerWidth; // start at right edge
+    img.style.left = x + "px";
+
+
+
+    function move() {
+      x -= speed;
+      img.style.left = x + "px";
+
+      // stop when completely off-screen
+      if (x > -img.width) {
+        requestAnimationFrame(move);
+      }
+    }
+
+    move();
+  };
+};
 
 const cues = [
-  { beat: 21.5, pose: "pose-1", duration: 1 }, //
-  { beat: 37.0, pose: "pose-2", duration: 1 },
-  { beat: 53.0, pose: "pose-1", duration: 1 },
-  { beat: 93.0, pose: "pose-2", duration: 1 },
-  { beat: 95.5, pose: "pose-1", duration: 1 },
-  { beat: 107.5, pose: "pose-2", duration: 1 },
-  { beat: 112.0, pose: "pose-1", duration: 1 },
-  { beat: 133.0, pose: "pose-2", duration: 4 },
-  { beat: 164.5, pose: "pose-1", duration: 2 }, //give
-  { beat: 167.5, pose: "pose-2", duration: 2 }, // up
-  { beat: 172.0, pose: "pose-1", duration: 2 },
-  { beat: 175.0, pose: "pose-2", duration: 2 }
+  { beat: 21.5, pose: "pose-1", duration: 1, double: false }, //
+  { beat: 37.0, pose: "pose-2", duration: 1, double: false },
+  { beat: 53.0, pose: "pose-1", duration: 1, double: true },
+  { beat: 93.0, pose: "pose-2", duration: 1, double: false },
+  { beat: 95.5, pose: "pose-1", duration: 1, double: false },
+  { beat: 107.5, pose: "pose-2", duration: 1, double: false },
+  { beat: 112.0, pose: "pose-1", duration: 1, double: false },
+  { beat: 133.0, pose: "pose-2", duration: 4, double: true },
+  { beat: 164.5, pose: "pose-1", duration: 2, double: false }, //give
+  { beat: 167.5, pose: "pose-2", duration: 2, double: false }, // up
+  { beat: 172.0, pose: "pose-1", duration: 2, double: false },
+  { beat: 175.0, pose: "pose-2", duration: 2, double: false }
 ];
 
 
@@ -204,8 +233,12 @@ function checkPoseTiming(beat) {
 
         isHolding = false;
         holdStartTime = null;
-        currentCueIndex++;
+
+        if (cue.double == true) {
+          points++;
+        }
         points++;
+        currentCueIndex++;
         document.getElementById("points").innerText = points;
         console.log("You have", points, "points!");
       }
