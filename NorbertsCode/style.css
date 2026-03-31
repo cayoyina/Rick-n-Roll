@@ -1,5 +1,7 @@
 body {
   font-family: Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .container {
@@ -8,7 +10,8 @@ body {
   margin: 10px 0;
 }
 
-video, canvas {
+video,
+canvas {
   width: 640px;
   height: 480px;
 }
@@ -37,7 +40,7 @@ canvas {
 }
 
 .startButton {
-   padding: 4px 8px;
+  padding: 4px 8px;
   border-style: solid;
   border-width: 1px;
   border-radius: 5px;
@@ -47,7 +50,7 @@ canvas {
 }
 
 .pauseButton {
-   padding: 4px 8px;
+  padding: 4px 8px;
   border-style: solid;
   border-width: 1px;
   border-radius: 5px;
@@ -77,4 +80,3 @@ input[type="file"] {
 input[type="file"]::file-selector-button {
   display: none;
 }
-

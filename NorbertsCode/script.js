@@ -66,6 +66,7 @@ function GameLoop() {
   let beat = time / 0.530973451 * 2.0 //Achtel 
   checkPoseTiming(beat);
   //console.log(beat);
+  move(beat);
   requestAnimationFrame(GameLoop);
   //console.log(beat);
 }
@@ -126,32 +127,11 @@ function onPoseResults(results) {
 const img = document.getElementById("pistoleL");
 const button = document.getElementById("startButton");
 const stops = document.getElementById("pauseButton");
-const speed = 1;
+const speed = 2;
 
 
 
-button.onclick = () => {
-  img.src = "pistoleL.png"; // image starts loading here
 
-  img.onload = () => {
-    let x = window.innerWidth; // start at right edge
-    img.style.left = x + "px";
-
-
-
-    function move() {
-      x -= speed;
-      img.style.left = x + "px";
-
-      // stop when completely off-screen
-      if (x > -img.width) {
-        requestAnimationFrame(move);
-      }
-    }
-
-    move();
-  };
-};
 
 const cues = [
   { beat: 21.5, pose: "pose-1", duration: 1, double: false }, //
@@ -176,6 +156,7 @@ const preTolerance = -3
 let isHolding = false;
 let tooSoon = false;
 let points = 0
+let hasSpawned = false;
 document.getElementById("points").innerText = points;
 
 function checkPoseTiming(beat) {
@@ -210,6 +191,7 @@ function checkPoseTiming(beat) {
     console.log("❌ Pose verpasst!", cue.pose);
     tooSoon = false;
     currentCueIndex++;
+    hasSpawned = false;
     return;
   }
 
@@ -239,6 +221,7 @@ function checkPoseTiming(beat) {
         }
         points++;
         currentCueIndex++;
+        hasSpawned = false;
         document.getElementById("points").innerText = points;
         console.log("You have", points, "points!");
       }
@@ -250,13 +233,105 @@ function checkPoseTiming(beat) {
       holdStartTime = null;
       tooSoon = false;
       currentCueIndex++;
+      hasSpawned = false;
     }
+  }
+}
+
+
+let poseOver = false;
+
+function move(beat) {
+  const cue = cues[currentCueIndex];
+  if (!cue) return;
+
+  // Spawn ca. 10 Beats vorher
+  if (!hasSpawned && beat >= cue.beat - 30) {
+    console.log("SPAWN");
+    const img = document.createElement("img")
+    switch (cue.pose) {
+      case "pose-1":
+        console.log("poooooo1");
+        poseOver = false;
+        img.src = "pistoleL.png";
+        break;
+      case "pose-2":
+        console.log("poooooo2");
+        poseOver = false;
+        img.src = "pistoleR.png";
+        break;
+    }
+    const startX = window.innerWidth;
+    img.style.left = startX + "px";
+
+    hasSpawned = true;
+  }
+  if (hasSpawned && !poseOver) {
+    let x = parseFloat(img.style.left) || window.innerWidth;
+    x -= speed;
+     img.style.left = x + "px";
+  }
+  if (beat >= cue.beat) {
+    poseOver = true;
+    console.log("1234567890");
+    img.remove()
   }
 }
 
 
 
 
+// function move(beat) {
+//   if (beat == cues.beat - 10) {
+//     console.log("HUHHHÜÜÜÜÜÜÜÜÜÜÜÜ");
+
+//     switch (currentCueIndex) {
+
+//       case (0):
+//         img.src = "pistoleL.png";
+
+//         break;
+
+//       case (1):
+//         img.src = "pistoleR";
+
+//         break;
+
+//          case (2):
+//         img.src = "pistoleL.png";
+
+//         break;
+
+//          case (3):
+//         img.src = "pistoleL.png";
+
+//         break;
+
+//         case (4):
+//         img.src = "pistoleL.png";
+
+//         break;
+
+//     }
+//   }
+
+
+
+//   ; img.onload = () => {
+//     let x = window.innerWidth; // start at right edge
+//     img.style.left = x + "px";
+
+
+//     x -= speed;
+//     img.style.left = x + "px";
+
+//     // stop when beat 
+//     if (beat == cues.beat) {
+//       // requestAnimationFrame(move);
+
+//     };
+//   }
+// }
 // function checkPoseTiming(beat) {
 //   const cue = cues[currentCueIndex];
 //   if (!cue) return;
