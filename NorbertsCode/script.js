@@ -65,10 +65,11 @@ function GameLoop() {
   const time = Audio.currentTime
   let beat = time / 0.530973451 * 2.0 //Achtel 
   checkPoseTiming(beat);
-  //console.log(beat);
-  move(beat);
+  trySpawn(beat);
+  update(beat);
+  update2(beat);
   requestAnimationFrame(GameLoop);
-  //console.log(beat);
+
 }
 
 
@@ -124,10 +125,11 @@ function onPoseResults(results) {
   context.restore();
 }
 
-const img = document.getElementById("pistoleL");
+const img1 = document.getElementById("pistoleL");
+const img2 = document.getElementById("pistoleR");
 const button = document.getElementById("startButton");
 const stops = document.getElementById("pauseButton");
-const speed = 2;
+//const speed = 2;
 
 
 
@@ -146,10 +148,12 @@ const cues = [
   { beat: 167.5, pose: "pose-2", duration: 2, double: false }, // up
   { beat: 172.0, pose: "pose-1", duration: 2, double: false },
   { beat: 175.0, pose: "pose-2", duration: 2, double: false }
+  { beat: 175.0, pose: "pose-2", duration: 2, double: false }
 ];
 
 
 let currentCueIndex = 0;
+let currentCueIndex2 = 0;
 let holdStartTime = null
 const tolerance = 2
 const preTolerance = -3
@@ -160,20 +164,20 @@ let hasSpawned = false;
 document.getElementById("points").innerText = points;
 
 function checkPoseTiming(beat) {
-  const cue = cues[currentCueIndex];
-  if (!cue) return;
+  const cue2 = cues[currentCueIndex2];
+  if (!cue2) return;
 
-  const inWindow = Math.abs(beat - cue.beat) <= tolerance; // 
+  const inWindow = Math.abs(beat - cue2.beat) <= tolerance; // 
 
-  const preWindow = beat >= cue.beat + preTolerance && beat < cue.beat;
+  const preWindow = beat >= cue2.beat + preTolerance && beat < cue2.beat;
 
   //  inWindow && beat >= cue.beat && currentLabel === cue.pose && !isHolding
   //beat - cue.beat >= preTolerance && beat - cue.beat < tolerance
 
-  if (preWindow && currentLabel == cue.pose) {
+  if (preWindow && currentLabel == cue2.pose) {
     console.log("WAS MACHST DU???????????????????");
 
-    if (beat - cue.beat >= preTolerance && beat - cue.beat < tolerance)
+    if (beat - cue2.beat >= preTolerance && beat - cue2.beat < tolerance)
       console.log("ZU FRÜH BROOOOOOOO");
     tooSoon = true;
   }
@@ -182,22 +186,22 @@ function checkPoseTiming(beat) {
   // tooSoon = false;
   // }
 
-  if (beat >= cue.beat) {
-    console.log("AAAAAVVE MARIA", cue.pose);
+  if (beat >= cue2.beat) {
+    console.log("AAAAAVVE MARIA", cue2.pose);
   }
 
   // 🔴 MISS CHECK (GANZ AM ANFANG)
-  if (beat > cue.beat + tolerance && !isHolding) {
-    console.log("❌ Pose verpasst!", cue.pose);
+  if (beat > cue2.beat + tolerance && !isHolding) {
+    console.log("❌ Pose verpasst!", cue2.pose);
     tooSoon = false;
-    currentCueIndex++;
+    currentCueIndex2++;
     hasSpawned = false;
     return;
   }
 
 
   // 🟢 START der Pose (nur im Fenster erlaubt)
-  if (inWindow && currentLabel === cue.pose && !isHolding && !tooSoon) {
+  if (inWindow && currentLabel === cue2.pose && !isHolding && !tooSoon) {
     holdStartTime = beat; // wir schauen ab wann Pose gehlten
     isHolding = true;
     tooSoon = false;
@@ -206,77 +210,198 @@ function checkPoseTiming(beat) {
 
   // 🟡 HALTEN (IMMER weiter prüfen, egal ob im Fenster!)
   if (isHolding) {
-    if (currentLabel === cue.pose) {
+    if (currentLabel === cue2.pose) {
 
       const heldTime = beat - holdStartTime;
 
-      if (heldTime >= cue.duration) {
-        console.log("✅ Pose gehalten!", cue.pose);
+      if (heldTime >= cue2.duration) {
+        console.log("✅ Pose gehalten!", cue2.pose);
 
         isHolding = false;
         holdStartTime = null;
 
-        if (cue.double == true) {
+        if (cue2.double == true) {
           points++;
         }
         points++;
-        currentCueIndex++;
+        currentCueIndex2++;
         hasSpawned = false;
         document.getElementById("points").innerText = points;
         console.log("You have", points, "points!");
       }
 
     } else {
-      console.log("❌ Pose verloren", cue.pose);
+      console.log("❌ Pose verloren", cue2.pose);
 
       isHolding = false;
       holdStartTime = null;
       tooSoon = false;
-      currentCueIndex++;
+      currentCueIndex2++;
       hasSpawned = false;
     }
   }
 }
 
 
-let poseOver = false;
 
-function move(beat) {
+
+const startX = 1500
+const travelBeats = 10; // wie viele Beats vorher das Bild startet
+const targetX = 600//window.innerWidth / 2; // Zielposition (z.B. Mitte)
+let activeCues = [];
+let activeSil = [];
+
+
+
+
+function trySpawn(beat) {
   const cue = cues[currentCueIndex];
   if (!cue) return;
 
-  // Spawn ca. 10 Beats vorher
-  if (!hasSpawned && beat >= cue.beat - 30) {
-    console.log("SPAWN");
-    const img = document.createElement("img")
+  if (beat >= cue.beat - travelBeats) {
+
+    const img = document.createElement("img");
+    const img2 = document.createElement("img");
+    img.style.position = "fixed";
+    img.style.left = startX + "px";
+    img2.style.left = targetX + "px";
     switch (cue.pose) {
       case "pose-1":
-        console.log("poooooo1");
-        poseOver = false;
         img.src = "pistoleL.png";
+        img2.src = "SILL.png"
         break;
+
       case "pose-2":
-        console.log("poooooo2");
-        poseOver = false;
         img.src = "pistoleR.png";
+        img2.src = "SILR.png"
         break;
     }
-    const startX = window.innerWidth;
-    img.style.left = startX + "px";
 
-    hasSpawned = true;
-  }
-  if (hasSpawned && !poseOver) {
-    let x = parseFloat(img.style.left) || window.innerWidth;
-    x -= speed;
-     img.style.left = x + "px";
-  }
-  if (beat >= cue.beat) {
-    poseOver = true;
-    console.log("1234567890");
-    img.remove()
+    document.body.appendChild(img); //damit es wirklich in html 
+    document.body.appendChild(img2);
+    const instance = {
+      cue,
+      element: img,
+      spawnBeat: beat,
+      started: true,
+      finished: false
+    };
+    const sil = {
+      cue,
+      element: img2,
+      spawnBeat: beat,
+      done: false,
+      started: true,
+      finished: false
+    }
+
+    activeCues.push(instance);
+    activeSil.push(sil);
+    currentCueIndex++;
   }
 }
+
+
+function update(beat) {
+  //  console.log("done:", inst.done);
+
+  activeCues.forEach((inst) => {
+
+    const cue = inst.cue;
+
+    //seit her gespawned, wie lange bis despawn
+    const progress = (beat - inst.spawnBeat) / (cue.beat - inst.spawnBeat);
+    const clamped = Math.max(0, Math.min(progress, 1));
+
+    const x = startX + clamped * (targetX - startX);
+    //done = false;
+    inst.element.style.left = x + "px";
+
+    // Ziel erreicht
+    if (beat >= cue.beat) {
+
+      inst.finished = true;
+
+      inst.element.style.left = targetX + "px";
+    }
+
+
+    // 🧹 Alte Elemente entfernen
+    activeCues = activeCues.filter(inst => {
+      if (inst.finished) {
+        inst.element.remove();
+
+        // done = true;
+        return false;
+      }
+      return true;
+    });
+
+  })
+}
+
+
+
+function update2(beat) {
+
+  activeSil.forEach((inst) => {
+    const cue1 = inst.cue;
+    inst.done = true;
+    if (beat < cue1.beat) {
+
+      inst.done = false;
+      console.log("Done: False");
+
+
+    }
+    activeSil = activeSil.filter(inst => {
+      if (inst.done) {
+        console.log("remove");
+        inst.element.remove();
+
+        return false;
+      }
+      return true;
+    });
+
+  })
+}
+
+
+
+
+// Spawn ca. 10 Beats vorher
+//   if (!hasSpawned && beat >= cue.beat - 30) {
+//     console.log("SPAWN");
+//     const img = document.createElement("img")
+//     switch (cue.pose) {
+//       case "pose-1":
+//         console.log("poooooo1");
+//         poseOver = false;
+//         img.src = "pistoleL.png";
+//         break;
+//       case "pose-2":
+//         console.log("poooooo2");
+//         poseOver = false;
+//         img.src = "pistoleR.png";
+//         break;
+//     }
+//     const startX = window.innerWidth;
+//     img.style.left = startX + "px";
+
+//     hasSpawned = true;
+//   }
+//   if (hasSpawned && !poseOver) {
+//     let x = parseFloat(img.style.left) || window.innerWidth;
+//     x -= speed;
+//     img.style.left = x + "px";
+//   }
+//   if (beat >= cue.beat) {
+//     poseOver = true;
+//     console.log("1234567890");
+//     img.remove()
+//   }
+// }
 
 
 

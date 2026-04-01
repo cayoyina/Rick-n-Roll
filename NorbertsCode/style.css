@@ -4,6 +4,13 @@ body {
   overflow-y: hidden;
 }
 
+img {
+  position: fixed;
+  top: 50%;
+  width: 500px;
+  height: auto;
+}
+
 .container {
   display: block;
   position: relative;
