@@ -14,21 +14,28 @@
 
 <body>
 
+     <div class="Ödipus">
+    <p id="fb"></p>
+</div>
+
+ <div class="punkte">
     <p id="points"></p>
+</div>
+
     <div class="container">
         <video id="video" autoplay playsinline></video>
         <canvas id="canvas"></canvas>
     </div>
 
-    <div class="container">
+    <!-- <div class="container">
         <input type="text" id="poseName" placeholder="pose name">:
         <button id="addPoseButton" class="button"><b>add</b> pose sample</button>
-    </div>
+    </div> -->
 
 
     <button id="startButton" class="startButton">START</button>
 
-    <button id="pauseButton" class="pauseButton">PAUSE</button>
+    <!-- <button id="pauseButton" class="pauseButton">PAUSE</button> -->
 
     <audio id="RickRoll">
         <source src="RickRollKurz.wav" type="audio/mpeg">
@@ -81,11 +88,12 @@
     </body>
 
 
-    <div class="container">
-        <button id="saveButton" class="button"><b>save</b> pose library</button>
+    <div class="neu">
+        <!-- <button id="saveButton" class="button"><b>save</b> pose library</button> -->
         <label for="file-input" class="button"><b>load</b> pose library</label>
         <input type="file" id="file-input" name="file-input" accept=".json" />
     </div>
+
 </body>
 
 </html>

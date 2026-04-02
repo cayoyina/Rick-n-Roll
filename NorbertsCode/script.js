@@ -1,3 +1,5 @@
+// const { createElement } = require("react");
+
 const videoElement = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const context = canvas.getContext('2d');
@@ -40,11 +42,11 @@ let history = [];
 
   camera.start();
 
-  addPoseButton.addEventListener('click', addPose); // add pose button
+  // addPoseButton.addEventListener('click', addPose); // add pose button
   startButton.addEventListener('click', GameStart);
-  pauseButton.addEventListener('click', GamePause);
+  // pauseButton.addEventListener('click', GamePause);
   fileInput.addEventListener('change', loadPoseLibrary); // load pose library input
-  saveButton.addEventListener('click', savePoseLibrary); // save pose library button
+  // saveButton.addEventListener('click', savePoseLibrary); // save pose library button
 })();
 
 const bpm = 113;
@@ -147,7 +149,7 @@ const cues = [
   { beat: 164.5, pose: "pose-1", duration: 2, double: false }, //give
   { beat: 167.5, pose: "pose-2", duration: 2, double: false }, // up
   { beat: 172.0, pose: "pose-1", duration: 2, double: false },
-  { beat: 175.0, pose: "pose-2", duration: 2, double: false }
+  { beat: 175.0, pose: "pose-2", duration: 2, double: false },
   { beat: 175.0, pose: "pose-2", duration: 2, double: false }
 ];
 
@@ -160,10 +162,21 @@ const preTolerance = -3
 let isHolding = false;
 let tooSoon = false;
 let points = 0
+let fbb = document.getElementById("fb");
+let fb = "test";
 let hasSpawned = false;
+const delay = 2000;
 document.getElementById("points").innerText = points;
 
+
+function removeFb() {
+    fb = "";
+  }
+
+
 function checkPoseTiming(beat) {
+
+  fbb.innerText = fb;
   const cue2 = cues[currentCueIndex2];
   if (!cue2) return;
 
@@ -179,6 +192,9 @@ function checkPoseTiming(beat) {
 
     if (beat - cue2.beat >= preTolerance && beat - cue2.beat < tolerance)
       console.log("ZU FRÜH BROOOOOOOO");
+    
+    fb = "TOO EARLY";
+    setTimeout(removeFb, delay);
     tooSoon = true;
   }
 
@@ -192,6 +208,9 @@ function checkPoseTiming(beat) {
 
   // 🔴 MISS CHECK (GANZ AM ANFANG)
   if (beat > cue2.beat + tolerance && !isHolding) {
+    
+    fb = "MISSED!";
+    setTimeout(removeFb, delay);
     console.log("❌ Pose verpasst!", cue2.pose);
     tooSoon = false;
     currentCueIndex2++;
@@ -205,7 +224,7 @@ function checkPoseTiming(beat) {
     holdStartTime = beat; // wir schauen ab wann Pose gehlten
     isHolding = true;
     tooSoon = false;
-    console.log("Pose gestartet:", cue.pose);
+    console.log("Pose gestartet:", cue2.pose);
   }
 
   // 🟡 HALTEN (IMMER weiter prüfen, egal ob im Fenster!)
@@ -216,6 +235,9 @@ function checkPoseTiming(beat) {
 
       if (heldTime >= cue2.duration) {
         console.log("✅ Pose gehalten!", cue2.pose);
+        
+        fb = "SCORE!";
+        setTimeout(removeFb, delay);
 
         isHolding = false;
         holdStartTime = null;
@@ -232,6 +254,9 @@ function checkPoseTiming(beat) {
 
     } else {
       console.log("❌ Pose verloren", cue2.pose);
+      
+      fb = "BRUH";
+      setTimeout(removeFb, delay);
 
       isHolding = false;
       holdStartTime = null;
@@ -245,9 +270,9 @@ function checkPoseTiming(beat) {
 
 
 
-const startX = 1500
+const startX = 1600
 const travelBeats = 10; // wie viele Beats vorher das Bild startet
-const targetX = 600//window.innerWidth / 2; // Zielposition (z.B. Mitte)
+const targetX = 1110//window.innerWidth / 2; // Zielposition (z.B. Mitte)
 let activeCues = [];
 let activeSil = [];
 
