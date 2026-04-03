@@ -70,6 +70,7 @@ function GameLoop() {
   trySpawn(beat);
   update(beat);
   update2(beat);
+  rush(beat);
   requestAnimationFrame(GameLoop);
 
 }
@@ -170,8 +171,9 @@ document.getElementById("points").innerText = points;
 
 
 function removeFb() {
-    fb = "";
-  }
+  fb = "";
+}
+
 
 
 function checkPoseTiming(beat) {
@@ -192,8 +194,9 @@ function checkPoseTiming(beat) {
 
     if (beat - cue2.beat >= preTolerance && beat - cue2.beat < tolerance)
       console.log("ZU FRÜH BROOOOOOOO");
-    
-    fb = "TOO EARLY";
+    document.getElementById('fb').style.color = 'red';
+    document.getElementById('fb').style.fontSize = "200px";
+    fb = "EARLY";
     setTimeout(removeFb, delay);
     tooSoon = true;
   }
@@ -208,7 +211,8 @@ function checkPoseTiming(beat) {
 
   // 🔴 MISS CHECK (GANZ AM ANFANG)
   if (beat > cue2.beat + tolerance && !isHolding) {
-    
+    document.getElementById('fb').style.color = 'red';
+    document.getElementById('fb').style.fontSize = "200px";
     fb = "MISSED!";
     setTimeout(removeFb, delay);
     console.log("❌ Pose verpasst!", cue2.pose);
@@ -235,7 +239,9 @@ function checkPoseTiming(beat) {
 
       if (heldTime >= cue2.duration) {
         console.log("✅ Pose gehalten!", cue2.pose);
-        
+
+        document.getElementById('fb').style.color = 'lime';
+        document.getElementById('fb').style.fontSize = "200px";
         fb = "SCORE!";
         setTimeout(removeFb, delay);
 
@@ -254,8 +260,10 @@ function checkPoseTiming(beat) {
 
     } else {
       console.log("❌ Pose verloren", cue2.pose);
-      
-      fb = "BRUH";
+
+      document.getElementById('fb').style.color = 'aquamarine';
+      document.getElementById('fb').style.fontSize = "200px";
+      fb = "BRUH!";
       setTimeout(removeFb, delay);
 
       isHolding = false;
@@ -266,7 +274,28 @@ function checkPoseTiming(beat) {
     }
   }
 }
+//  document.getElementById("rush").innerText = ""
 
+
+
+function rush(beat) {
+
+
+  for (let i = beat; i >= 165;) {
+    document.getElementById("r").innerText = "R";
+    document.getElementById("u").innerText = "U";
+    document.getElementById("s").innerText = "S";
+    document.getElementById("h").innerText = "H";
+
+    if (beat >= 190) {
+      document.getElementById("r").innerText = "";
+      document.getElementById("u").innerText = "";
+      document.getElementById("s").innerText = "";
+      document.getElementById("h").innerText = "";
+    }
+    break;
+  }
+}
 
 
 
