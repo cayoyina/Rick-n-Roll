@@ -822,5 +822,5 @@ function savePoseLibrary() {
 function drawLabel(context, label) {
   context.fillStyle = 'white';
   context.font = '96px sans-serif';
-  context.fillText(label, 10, 80);
+  // context.fillText(label, 10, 80);
 }
