@@ -118,7 +118,7 @@ function onPoseResults(results) {
   // draw label
   context.scale(-1, 1);
   context.translate(-canvas.width, 0);
-  // drawLabel(context, label);
+  drawLabel(context, label);
 
   if (label !== currentLabel) {
     onRecognizedPose(label);
@@ -140,7 +140,7 @@ const stops = document.getElementById("pauseButton");
 
 const cues = [
   { beat: 21.5, pose: "pistole-links", duration: 0.2, double: false }, // bara
-  { beat: 37.0, pose: "pistole-rechts", duration: 0.2, double: false }, // bara
+  { beat: 37.0, pose: "pistole-links", duration: 0.2, double: false }, // bara
   { beat: 53.0, pose: "sprung", duration: 0.2, double: false }, // ara
   { beat: 93.0, pose: "suchen-links", duration: 0.2, double: false }, // so
   { beat: 95.5, pose: "suchen-rechts", duration: 0.2, double: false }, // I
@@ -162,8 +162,8 @@ const cues = [
   { beat: 291.5, pose: "knie-links", duration: 0.2, double: false }, // AAA
   { beat: 323.0, pose: "da-links", duration: 0.2, double: true }, //give 
   { beat: 167.5, pose: "da-rechts", duration: 0.2, double: true }, // up
-  { beat: 326.0, pose: "yippie-links", duration: 0.2, double: true }, //let
-  { beat: 331.5, pose: "yippie-rechts", duration: 0.2, double: true }, //down 
+  { beat: 326.0, pose: "pistole-links", duration: 0.2, double: true }, //let
+  { beat: 331.5, pose: "pistole-links", duration: 0.2, double: true }, //down 
   { beat: 334.0, pose: "da-links", duration: 0.2, double: true }, //run
   { beat: 339.0, pose: "da-rechts", duration: 0.2, double: true }, //oround
   { beat: 347.0, pose: "zickzack", duration: 0.2, double: true }, //desert
@@ -197,7 +197,6 @@ function removeFb() {
 }
 
 
-
 function checkPoseTiming(beat) {
 
   fbb.innerText = fb;
@@ -216,7 +215,7 @@ function checkPoseTiming(beat) {
 
     if (beat - cue2.beat >= preTolerance && beat - cue2.beat < tolerance)
       console.log("ZU FRÜH BROOOOOOOO");
-    document.getElementById('fb').style.color = 'red';
+    document.getElementById('fb').style.color = 'maroon';
     document.getElementById('fb').style.fontSize = "200px";
     fb = "EARLY";
     setTimeout(removeFb, delay);
@@ -233,7 +232,7 @@ function checkPoseTiming(beat) {
 
   // 🔴 MISS CHECK (GANZ AM ANFANG)
   if (beat > cue2.beat + tolerance && !isHolding) {
-    document.getElementById('fb').style.color = 'red';
+    document.getElementById('fb').style.color = 'maroon';
     document.getElementById('fb').style.fontSize = "200px";
     fb = "MISSED!";
     setTimeout(removeFb, delay);
@@ -317,6 +316,14 @@ function rush(beat) {
     }
     break;
   }
+
+  if (beat >= 270) {
+    document.getElementById("achtung").innerText = "Hard pose ahead!!!"
+  }
+
+  if (beat >= 285) {
+    document.getElementById("achtung").innerText = ""
+  }
   for (let i = beat; i >= 323;) {
     document.getElementById("r").innerText = "R";
     document.getElementById("u").innerText = "U";
@@ -328,16 +335,22 @@ function rush(beat) {
       document.getElementById("u").innerText = "";
       document.getElementById("s").innerText = "";
       document.getElementById("h").innerText = "";
+
     }
     break;
   }
+  if (beat >= 390) {
+    document.getElementById("Good").innerText = "GOOD"
+    document.getElementById("Job").innerText = "JOB!"
+  }
+
 }
 
 
 
-const startX = 1600
+const startX = 1800
 const travelBeats = 8; // wie viele Beats vorher das Bild startet
-const targetX = 1115//window.innerWidth / 2; // Zielposition (z.B. Mitte)
+const targetX = 1130//window.innerWidth / 2; // Zielposition (z.B. Mitte)
 let activeCues = [];
 let activeSil = [];
 let changed = false
@@ -350,6 +363,7 @@ function trySpawn(beat) {
 
   if (beat >= cue.beat - travelBeats) {
     // changed = false
+
     const img2 = document.createElement("img");
     const img = document.createElement("img");
     img.style.zIndex = "999";
@@ -358,18 +372,32 @@ function trySpawn(beat) {
     img2.style.left = targetX + "px";
     img.style.left = startX + "px";
 
-    switch (cue.pose) {
-      case "pistole-links":
+    switch (cue.beat) {
+      case 21.5:
         img.src = "Pistolelinks.png";
         img2.src = "SilPistolelinks.jpg";
         r--;
         break;
 
-      case "pistole-rechts":
+      case 37:
         img.src = "Pistolerechts.png";
         img2.src = "SilPistolerechts.jpg";
         r--;
         break;
+      case 326.0:
+        img.src = "Pistolelinks.png";
+        img2.src = "SilPistolelinks.jpg";
+        r--;
+        break;
+
+      case 331.5:
+        img.src = "Pistolerechts.png";
+        img2.src = "SilPistolerechts.jpg";
+        r--;
+        break;
+    }
+
+    switch (cue.pose) {
 
       case "sprung":
         img.src = "Sprung.png";
@@ -403,7 +431,7 @@ function trySpawn(beat) {
 
       case "zickzack":
         img.src = "Zickzack.gif";
-        img2.src = "SilZickzack.jpg";
+        img2.src = "SilZickzack2.jpg";
         r--;
         break;
 
@@ -458,18 +486,18 @@ function trySpawn(beat) {
       started: true,
       finished: false
     }
-  
-      if (changed) {
+
+    if (changed) {
       console.log(r);
       sil.element.style.zIndex = r;
     }
 
-  
+
     changed = true;
     activeCues.push(instance);
     activeSil.push(sil);
     currentCueIndex++;
-    
+
   }
 }
 
@@ -791,8 +819,8 @@ function savePoseLibrary() {
   URL.revokeObjectURL(anchor.href);
 }
 
-// function drawLabel(context, label) {
-//   context.fillStyle = 'white';
-//   context.font = '96px sans-serif';
-//   context.fillText(label, 10, 80);
-// }
+function drawLabel(context, label) {
+  context.fillStyle = 'white';
+  context.font = '96px sans-serif';
+  context.fillText(label, 10, 80);
+}
