@@ -118,7 +118,7 @@ function onPoseResults(results) {
   // draw label
   context.scale(-1, 1);
   context.translate(-canvas.width, 0);
-  drawLabel(context, label);
+  // drawLabel(context, label);
 
   if (label !== currentLabel) {
     onRecognizedPose(label);
@@ -139,19 +139,41 @@ const stops = document.getElementById("pauseButton");
 
 
 const cues = [
-  { beat: 21.5, pose: "pose-1", duration: 1, double: false }, //
-  { beat: 37.0, pose: "pose-2", duration: 1, double: false },
-  { beat: 53.0, pose: "pose-1", duration: 1, double: true },
-  { beat: 93.0, pose: "pose-2", duration: 1, double: false },
-  { beat: 95.5, pose: "pose-1", duration: 1, double: false },
-  { beat: 107.5, pose: "pose-2", duration: 1, double: false },
-  { beat: 112.0, pose: "pose-1", duration: 1, double: false },
-  { beat: 133.0, pose: "pose-2", duration: 4, double: true },
-  { beat: 164.5, pose: "pose-1", duration: 2, double: false }, //give
-  { beat: 167.5, pose: "pose-2", duration: 2, double: false }, // up
-  { beat: 172.0, pose: "pose-1", duration: 2, double: false },
-  { beat: 175.0, pose: "pose-2", duration: 2, double: false },
-  { beat: 175.0, pose: "pose-2", duration: 2, double: false }
+  { beat: 21.5, pose: "pistole-links", duration: 0.2, double: false }, // bara
+  { beat: 37.0, pose: "pistole-rechts", duration: 0.2, double: false }, // bara
+  { beat: 53.0, pose: "sprung", duration: 0.2, double: false }, // ara
+  { beat: 93.0, pose: "suchen-links", duration: 0.2, double: false }, // so
+  { beat: 95.5, pose: "suchen-rechts", duration: 0.2, double: false }, // I
+  { beat: 107.5, pose: "ballett", duration: 0.2, double: false }, //I 
+  { beat: 112.0, pose: "ballett-o", duration: 0.2, double: false },// on
+  { beat: 133.0, pose: "zickzack", duration: 0.2, double: false }, // AAAA
+  { beat: 164.5, pose: "da-links", duration: 0.2, double: true }, //give
+  { beat: 167.5, pose: "da-rechts", duration: 0.2, double: true }, // up
+  { beat: 172.0, pose: "yippie-links", duration: 0.2, double: true },
+  { beat: 175.0, pose: "yippie-rechts", duration: 0.2, double: true }, //down
+  { beat: 180.0, pose: "suchen-links", duration: 0.2, double: true },//run
+  { beat: 188.0, pose: "zickzack", duration: 0.2, double: true }, //desert
+  { beat: 196.0, pose: "ballett", duration: 0.2, double: true }, //make
+  { beat: 199.5, pose: "ballett-o", duration: 0.2, double: true }, //cryx
+  { beat: 204.0, pose: "yippie-links", duration: 0.2, double: true }, // sday goodbye
+  { beat: 212.0, pose: "suchen-links", duration: 0.2, double: true },//tell a lie
+  { beat: 219.0, pose: "zickzack", duration: 0.2, double: true }, //hurt
+  { beat: 255.0, pose: "ballett-o", duration: 0.2, double: false }, //too shy
+  { beat: 291.5, pose: "knie-links", duration: 0.2, double: false }, // AAA
+  { beat: 323.0, pose: "da-links", duration: 0.2, double: true }, //give 
+  { beat: 167.5, pose: "da-rechts", duration: 0.2, double: true }, // up
+  { beat: 326.0, pose: "yippie-links", duration: 0.2, double: true }, //let
+  { beat: 331.5, pose: "yippie-rechts", duration: 0.2, double: true }, //down 
+  { beat: 334.0, pose: "da-links", duration: 0.2, double: true }, //run
+  { beat: 339.0, pose: "da-rechts", duration: 0.2, double: true }, //oround
+  { beat: 347.0, pose: "zickzack", duration: 0.2, double: true }, //desert
+  { beat: 355.5, pose: "ballett", duration: 0.2, double: true }, // make
+  { beat: 358.5, pose: "ballett-o", duration: 0.2, double: true }, //cry
+  { beat: 363.0, pose: "yippie-links", duration: 0.2, double: true }, // say
+  { beat: 371.0, pose: "suchen-links", duration: 0.2, double: true }, //tell
+  { beat: 374.6, pose: "suchen-rechts", duration: 0.2, double: true }, //a lie
+  { beat: 379.0, pose: "zickzack", duration: 0.2, double: true } //hurt
+
 ];
 
 
@@ -174,7 +196,7 @@ function removeFb() {
   fb = "";
 }
 
-z
+
 
 function checkPoseTiming(beat) {
 
@@ -215,7 +237,7 @@ function checkPoseTiming(beat) {
     document.getElementById('fb').style.fontSize = "200px";
     fb = "MISSED!";
     setTimeout(removeFb, delay);
-    console.log("❌ Pose verpasst!", cue2.pose);
+    //console.log("❌ Pose verpasst!", cue2.pose);
     tooSoon = false;
     currentCueIndex2++;
     hasSpawned = false;
@@ -287,7 +309,21 @@ function rush(beat) {
     document.getElementById("s").innerText = "S";
     document.getElementById("h").innerText = "H";
 
-    if (beat >= 190) {
+    if (beat >= 219) {
+      document.getElementById("r").innerText = "";
+      document.getElementById("u").innerText = "";
+      document.getElementById("s").innerText = "";
+      document.getElementById("h").innerText = "";
+    }
+    break;
+  }
+  for (let i = beat; i >= 323;) {
+    document.getElementById("r").innerText = "R";
+    document.getElementById("u").innerText = "U";
+    document.getElementById("s").innerText = "S";
+    document.getElementById("h").innerText = "H";
+
+    if (beat >= 380) {
       document.getElementById("r").innerText = "";
       document.getElementById("u").innerText = "";
       document.getElementById("s").innerText = "";
@@ -300,12 +336,12 @@ function rush(beat) {
 
 
 const startX = 1600
-const travelBeats = 10; // wie viele Beats vorher das Bild startet
-const targetX = 1110//window.innerWidth / 2; // Zielposition (z.B. Mitte)
+const travelBeats = 8; // wie viele Beats vorher das Bild startet
+const targetX = 1115//window.innerWidth / 2; // Zielposition (z.B. Mitte)
 let activeCues = [];
 let activeSil = [];
-
-
+let changed = false
+let r = 50
 
 
 function trySpawn(beat) {
@@ -313,26 +349,100 @@ function trySpawn(beat) {
   if (!cue) return;
 
   if (beat >= cue.beat - travelBeats) {
-
-    const img = document.createElement("img");
+    // changed = false
     const img2 = document.createElement("img");
+    const img = document.createElement("img");
+    img.style.zIndex = "999";
+    img2.style.zIndex = "0";
     img.style.position = "fixed";
-    img.style.left = startX + "px";
     img2.style.left = targetX + "px";
+    img.style.left = startX + "px";
+
     switch (cue.pose) {
-      case "pose-1":
-        img.src = "pistoleL.png";
-        img2.src = "SILL.png"
+      case "pistole-links":
+        img.src = "Pistolelinks.png";
+        img2.src = "SilPistolelinks.jpg";
+        r--;
         break;
 
-      case "pose-2":
-        img.src = "pistoleR.png";
-        img2.src = "SILR.png"
+      case "pistole-rechts":
+        img.src = "Pistolerechts.png";
+        img2.src = "SilPistolerechts.jpg";
+        r--;
+        break;
+
+      case "sprung":
+        img.src = "Sprung.png";
+        img2.src = "SilSprung.jpg";
+        r--;
+        break;
+
+      case "suchen-links":
+        img.src = "suchenlinks.png";
+        img2.src = "SilSuchenlinks.jpg";
+        r--;
+        break;
+
+      case "suchen-rechts":
+        img.src = "suchenrechts.png";
+        img2.src = "SilSuchenrechts.jpg";
+        r--;
+        break;
+
+      case "ballett":
+        img.src = "Ballett.png";
+        img2.src = "SilBallett.jpg";
+        r--;
+        break;
+
+      case "ballett-o":
+        img.src = "BallettO.png";
+        img2.src = "SilBallettO.jpg";
+        r--;
+        break;
+
+      case "zickzack":
+        img.src = "Zickzack.gif";
+        img2.src = "SilZickzack.jpg";
+        r--;
+        break;
+
+      case "da-links":
+        img.src = "Dalinks.png";
+        img2.src = "SilDalinks.jpg";
+        r--;
+        break;
+
+      case "da-rechts":
+        img.src = "Darechts.png";
+        img2.src = "SilDarechts.jpg";
+        r--;
+        break;
+
+      case "yippie-links":
+        img.src = "Yippielinks.png";
+        img2.src = "SilYippielinks.jpg";
+        r--;
+        break;
+
+      case "yippie-rechts":
+        img.src = "YippieRechts.png";
+        img2.src = "SilYippieRechts.png";
+        r--;
+        break;
+
+      case "knie-links":
+        img.src = "Knie.png";
+        img2.src = "SilKnie.jpg";
+        r--;
         break;
     }
 
-    document.body.appendChild(img); //damit es wirklich in html 
+
+
     document.body.appendChild(img2);
+    document.body.appendChild(img); //damit es wirklich in html 
+
     const instance = {
       cue,
       element: img,
@@ -348,10 +458,18 @@ function trySpawn(beat) {
       started: true,
       finished: false
     }
+  
+      if (changed) {
+      console.log(r);
+      sil.element.style.zIndex = r;
+    }
 
+  
+    changed = true;
     activeCues.push(instance);
     activeSil.push(sil);
     currentCueIndex++;
+    
   }
 }
 
@@ -404,7 +522,7 @@ function update2(beat) {
     if (beat < cue1.beat) {
 
       inst.done = false;
-      console.log("Done: False");
+      //console.log("Done: False");
 
 
     }
@@ -596,7 +714,7 @@ function classifyWithThreshold(features, k = 3) {
     }
   }
 
-  return 'unknown';
+  return '';
 }
 
 const weights = [1, 1, 0.8, 0.8, 1, 1, 0.6, 0.6];
@@ -673,8 +791,8 @@ function savePoseLibrary() {
   URL.revokeObjectURL(anchor.href);
 }
 
-function drawLabel(context, label) {
-  context.fillStyle = 'white';
-  context.font = '96px sans-serif';
-  context.fillText(label, 10, 80);
-}
+// function drawLabel(context, label) {
+//   context.fillStyle = 'white';
+//   context.font = '96px sans-serif';
+//   context.fillText(label, 10, 80);
+// }

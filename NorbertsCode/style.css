@@ -6,13 +6,16 @@ body {
 }
 
 img {
-  position: fixed;
-  top: 57%;
-  width: 500px;
+  position: absolute;
+  top: 60%;
+  width: 380px;
   height: auto;
 }
 
+
+
 .container {
+  z-index: 1000;
   /* position: absolute;
   top: 40%;
   left: 50%; */
@@ -24,18 +27,19 @@ img {
 
 video,
 canvas {
-
-  width: 1210px;
+z-index: 1000;
+  width: 1160px;
   height: auto;
 }
 
 video {
-  
+  z-index: 1000;
   transform: scaleX(-1);
   background: black;
 }
 
 canvas {
+  z-index: 1000;
   position: absolute;
   left: 0;
   top: 0;
@@ -93,10 +97,10 @@ position: absolute;
 
 .punkte {
   position: absolute;
-  top: 48%;
+  top: 45%;
   left: 82%;
   transform: translate(-50%, -50%);
-  font-size: 17.0em;
+  font-size: 15.0em;
   color: rgb(29, 112, 255);
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 
