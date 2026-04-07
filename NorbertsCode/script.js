@@ -164,7 +164,7 @@ let isHolding = false;
 let tooSoon = false;
 let points = 0
 let fbb = document.getElementById("fb");
-let fb = "test";
+let fb = "";
 let hasSpawned = false;
 const delay = 2000;
 document.getElementById("points").innerText = points;
@@ -174,7 +174,7 @@ function removeFb() {
   fb = "";
 }
 
-
+z
 
 function checkPoseTiming(beat) {
 
